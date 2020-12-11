@@ -1,22 +1,29 @@
-let round = 0;
 let yourScore = 0;
 let computerScore = 0;
-let message;
+let playing = true;
 
-document.getElementById("rock").addEventListener("click", function() {
-    [result, message] = playRound('rock', computerPlay());
-    checkResult(result, message);
-});
 
-document.getElementById("paper").addEventListener("click", function() {
-    [result, message] = playRound('paper', computerPlay());
-    checkResult(result, message);
-});
+let buttons = document.querySelectorAll('.options div');
 
-document.getElementById("scissors").addEventListener("click", function() {
-    [result, message] = playRound('scissors', computerPlay());
-    checkResult(result, message);
-});
+
+let restartButton = document.querySelector('#restart');
+restartButton.addEventListener('click', function() {
+    playing = true;
+    resetScore();
+    setMessage('');
+    restartButton.setAttribute('hidden', true);
+})
+
+//Le doy funcionalidad a los botones
+buttons.forEach((elem) => {
+    elem.addEventListener('click', function(e) {
+        id = elem.id
+        if (playing) {
+            [result, message] = playRound(id, computerPlay());
+            checkResult(result, message);
+        }
+    })
+})
 
 function checkResult(result, message) {
     if (result == 'win') {
@@ -24,34 +31,35 @@ function checkResult(result, message) {
     } else if (result == 'lose') {
         computerScore++;
     };
-    document.querySelector('.message').innerHTML = message;
     updateScore();
-    round = round + 1;
-    if (round == 5) {
+    document.querySelector('.message').innerHTML = message;
+    if (yourScore == 5 || computerScore == 5) {
         checkWinner();
     }
 }
 
 function resetScore() {
-    round = 0;
     yourScore = 0;
     computerScore = 0;
-    message = '';
     updateScore();
 }
 
 function checkWinner() {
     updateScore();
-
+    playing = false;
     if (computerScore == yourScore) {
-        alert(`Is a tie! YOU: ${yourScore} COMPUTER: ${computerScore}`);
-        resetScore()
+        setMessage(`Is a tie! \n
+        YOU: ${yourScore} \n
+        CPU: ${computerScore}`);
     } else if (computerScore > yourScore) {
-        alert(`Oh, you lose! YOU: ${yourScore} COMPUTER: ${computerScore}`)
-        resetScore()
+        setMessage(`Oh, you lose! \n
+        YOU: ${yourScore} \n
+        CPU: ${computerScore}
+        `);
     } else {
-        alert(`You won!, good one! YOU: ${yourScore} COMPUTER: ${computerScore}`)
-        resetScore();
+        setMessage(`You won!, good one! \n
+            YOU: ${yourScore} \n
+            CPU: ${computerScore}`);
     }
 }
 
@@ -72,35 +80,40 @@ function computerPlay() {
 
 function playRound(playerSelection, computerSelection) {
     if (playerSelection == 'rock' && computerSelection == 'rock') {
-        return ['tie', 'Almost! You both played rock, is a tie!']
+        return ['tie', 'Almost! You both played rock, is a tie!'];
     }
     if (playerSelection == 'paper' && computerSelection == 'paper') {
-        return ['tie', 'So close! You both played paper, is a tie!']
+        return ['tie', 'So close! You both played paper, is a tie!'];
     }
     if (playerSelection == 'scissors' && computerSelection == 'scissors') {
-        return ['tie', 'Blade fight! You both played scissors, is a tie!']
+        return ['tie', 'Blade fight! You both played scissors, is a tie!'];
     }
     if (playerSelection == 'rock' && computerSelection == 'scissors') {
-        return ['win', 'Smash that!, you won the round!']
+        return ['win', 'Smash that!, you won the round!'];
     }
     if (playerSelection == 'scissors' && computerSelection == 'rock') {
-        return ['lose', 'Ups, you lose!']
+        return ['lose', 'Ups, you lose!'];
     }
     if (playerSelection == 'paper' && computerSelection == 'rock') {
-        return ['win', 'Good one!']
+        return ['win', 'Good one!'];
     }
     if (playerSelection == 'rock' && computerSelection == 'paper') {
-        return ['lose', 'Shame on you, Loser!']
+        return ['lose', 'Shame on you, Loser!'];
     }
     if (playerSelection == 'scissors' && computerSelection == 'paper') {
-        return ['win', 'Nice choice!, You won the round!']
+        return ['win', 'Nice choice!, You won the round!'];
     }
     if (playerSelection == 'paper' && computerSelection == 'scissors') {
-        return ['lose', 'Ups, you lose!']
+        return ['lose', 'Ups, you lose!'];
     }
 }
 
 function updateScore() {
-    document.querySelector('.you span').innerHTML = yourScore;
-    document.querySelector('.computer span').innerHTML = computerScore;
+    document.querySelector('.you span').textContent = yourScore;
+    document.querySelector('.computer span').textContent = computerScore;
+}
+
+function setMessage(message) {
+    document.querySelector('.message').textContent = message;
+    document.querySelector('header button').hidden = false;
 }

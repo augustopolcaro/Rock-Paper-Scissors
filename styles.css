@@ -8,6 +8,16 @@ html {
 header {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+header button {
+    position: absolute;
+    top: 20%;
+    padding: 10px;
+    border: solid 1px;
+    background-color: var(--amarillo)
 }
 
 main {
